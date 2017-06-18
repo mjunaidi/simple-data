@@ -5,14 +5,14 @@
 
   MainController.$inject = [ 'modelService', 'themeService', 'storageService',
               '$uibModal', '$document', '$crypto', '$http', '$scope', '$location',
-              '$timeout', 'hotkeys', 'uuid4'
+              '$timeout', 'hotkeys', 'uuid4', 'Papa'
             ];
 
   var DEFAULT_KEY = '';
   var ALPHABETS = 'abcdefghijklmnopqrstuvwxyz';
 
   function MainController(modelService, themeService, storageService, uibModal,
-          document, crypto, http, scope, location, timeout, hotkeys, uuid4) {
+          document, crypto, http, scope, location, timeout, hotkeys, uuid4, Papa) {
     this._modelService = modelService;
     this._themeService = themeService;
     this._storageService = storageService;
@@ -25,6 +25,7 @@
     this._timeout = timeout;
     this._hotkeys = hotkeys;
     this._uuid4 = uuid4;
+    this._papa = Papa;
 
     this._initHeader();
     // _initBody called with ng-init in each page
@@ -86,6 +87,45 @@
       /* Anything that needs to be executed in path /blog goes here... */
     }
   };
+
+  MainController.prototype.uploadCsv = function() {
+    var ctrl = this;
+    var input = $('#uploaded');
+
+    input.change(function (results) {
+      //console.log(results);
+      parseCSV(results.target.files[0]);
+      input.val('');
+    });
+
+    function parseCSV(file) {
+      console.log(file.name);
+
+      ctrl.processingParseCSV = true;
+      ctrl._scope.fileName = file.name;
+
+      var results = ctrl._papa.parse(file, {
+        header: true
+      }).then(function (results) {
+        console.log(results);
+        /*
+        ctrl.importedTranslations = results.data;
+        ctrl.importLanguage = ctrl.importedTranslations[0].targetLanguage;
+        ctrl.processingParseCSV = false;
+
+        $scope.data = results.data;
+        $scope.totalImportRecord = $scope.data.length;
+        */
+      }).catch(function(results) {
+        ctrl.processingParseCSV = false;
+        alert(result);
+      });
+    }
+
+    input.trigger('click');
+  };
+
+  /* */
 
   MainController.prototype.generateUuid = function() {
     this.uuid = this._uuid4.generate();
