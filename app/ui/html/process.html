@@ -3,10 +3,11 @@
   <button class="btn btn-primary"
           ng-click="ctrl.uploadCsv()">Upload</button>
 
-  <div ng-if="ctrl.uploaded">
+  <!--<div ng-if="ctrl.uploaded">--><div>
     <div class="form-group">
       <label for="linePrefix">Line prefix</label>
       <input ng-model="ctrl.linePrefix"
+            ng-change="ctrl.set('linePrefix', ctrl.linePrefix)"
             type="text"
             class="form-control"
             id="linePrefix"
@@ -16,6 +17,7 @@
     <div class="form-group">
       <label for="linePostfix">Line postfix</label>
       <input ng-model="ctrl.linePostfix"
+            ng-change="ctrl.set('linePostfix', ctrl.linePostfix)"
             type="text"
             class="form-control"
             id="linePostfix"
@@ -25,6 +27,7 @@
     <div class="form-group">
       <label for="destVersion">Version</label>
       <input ng-model="ctrl.destVersion"
+            ng-change="ctrl.set('destVersion', ctrl.destVersion)"
             type="text"
             class="form-control"
             id="destVersion"
@@ -34,18 +37,22 @@
     <div class="form-group">
       <label for="destName">File name</label>
       <input ng-model="ctrl.destName"
+            ng-change="ctrl.set('destName', ctrl.destName)"
             type="text" class="form-control" id="destName" placeholder="file name...">
     </div>
 
     <div class="form-group">
       <label for="destType">Extension</label>
       <input ng-model="ctrl.destType"
-             type="text" class="form-control" id="destType" placeholder="extension (i.e: .txt)...">
+            ng-change="ctrl.set('destType', ctrl.destType)"
+            type="text" class="form-control" id="destType" placeholder="extension (i.e: .txt)...">
     </div>
 
     <div class="checkbox">
       <label>
-        <input  ng-model="ctrl.hasTimestamp" type="checkbox"> Add timestamp
+        <input ng-model="ctrl.hasTimestamp"
+              ng-change="ctrl.set('hasTimestamp', ctrl.hasTimestamp)"
+              type="checkbox"> Add timestamp
       </label>
     </div>
 

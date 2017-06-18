@@ -34,6 +34,14 @@
   }
 
   MainController.prototype._initHeader = function() {
+    var ctrl = this;
+
+    ctrl.store('linePrefix', ctrl.linePrefix);
+    ctrl.store('linePostfix', ctrl.destVersion);
+    ctrl.store('destVersion', ctrl.destVersion);
+    ctrl.store('hasTimestamp', ctrl.hasTimestamp);
+    ctrl.store('destName', ctrl.destName);
+    ctrl.store('destType', ctrl.destType);
 
     this.navbar = {
       templateUrl : 'app/ui/html/navbar.html',
@@ -82,6 +90,7 @@
   MainController.prototype._initBody = function() {
     if (this._location.path() === '/') {
       /* Anything that needs to be executed in home page goes here... */
+
     }
 
     if (this._location.path() === '/blog') {
@@ -109,8 +118,6 @@
     }
     ctrl.generated = g;
 
-
-
     var data = new Blob([ctrl.generated], {type: 'text/plain;charset=utf-8'});
     ctrl._fileSaver.saveAs(data, nameFile());
 
@@ -125,18 +132,18 @@
     }
 
     function currentTimestamp() {
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var yyyy = today.getFullYear();
-        var hh = today.getHours();
-        var MM = today.getMinutes();
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
-        if (hh < 10) hh = '0' + hh;
-        if (MM < 10) MM = '0' + MM;
-        var timestamp = yyyy + '.' + mm + '.' + dd + '.' + hh + '.' + MM;
-        return timestamp;
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+      var hh = today.getHours();
+      var MM = today.getMinutes();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      if (hh < 10) hh = '0' + hh;
+      if (MM < 10) MM = '0' + MM;
+      var timestamp = yyyy + '.' + mm + '.' + dd + '.' + hh + '.' + MM;
+      return timestamp;
     }
   };
 
@@ -198,6 +205,7 @@
         }
       }
       if (exist === false) {
+        if (this.saved === undefined) this.saved = [];
         this.saved.push(str);
         this.set('saved', this.saved);
       }
