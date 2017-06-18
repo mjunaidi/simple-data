@@ -107,15 +107,15 @@
       var results = ctrl._papa.parse(file, {
         header: true
       }).then(function (results) {
-        console.log(results);
-        /*
-        ctrl.importedTranslations = results.data;
-        ctrl.importLanguage = ctrl.importedTranslations[0].targetLanguage;
-        ctrl.processingParseCSV = false;
+        ctrl.contents = results.data;
 
-        $scope.data = results.data;
-        $scope.totalImportRecord = $scope.data.length;
-        */
+        if (ctrl.contents && ctrl.contents.length > 0) {
+          // get the keys
+          ctrl.keys = [];
+          for (var p in ctrl.contents[0]) {
+            ctrl.keys.push(p);
+          }
+        }
       }).catch(function(results) {
         ctrl.processingParseCSV = false;
         alert(result);
