@@ -20,6 +20,7 @@
     'ng-autofocus',
     'uuid4',
     'angular-underscore',
-    'papa-promise'
+    'papa-promise',
+    'ngFileSaver'
   ]);
 })();

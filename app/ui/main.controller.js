@@ -5,14 +5,14 @@
 
   MainController.$inject = [ 'modelService', 'themeService', 'storageService',
               '$uibModal', '$document', '$crypto', '$http', '$scope', '$location',
-              '$timeout', 'hotkeys', 'uuid4', 'Papa'
+              '$timeout', 'hotkeys', 'uuid4', 'Papa', 'FileSaver', 'Blob'
             ];
 
   var DEFAULT_KEY = '';
   var ALPHABETS = 'abcdefghijklmnopqrstuvwxyz';
 
   function MainController(modelService, themeService, storageService, uibModal,
-          document, crypto, http, scope, location, timeout, hotkeys, uuid4, Papa) {
+          document, crypto, http, scope, location, timeout, hotkeys, uuid4, Papa, FileSaver) {
     this._modelService = modelService;
     this._themeService = themeService;
     this._storageService = storageService;
@@ -26,6 +26,7 @@
     this._hotkeys = hotkeys;
     this._uuid4 = uuid4;
     this._papa = Papa;
+    this._fileSaver = FileSaver;
 
     this._initHeader();
     // _initBody called with ng-init in each page
@@ -88,6 +89,57 @@
     }
   };
 
+  MainController.prototype.generate = function() {
+    var ctrl = this;
+
+    var g = '';
+    for (var i in ctrl.contents) {
+      var c = ctrl.contents[i];
+      var ln = 'INSERT INTO vk7cgssntp.isolocales (ID, LCID, NAME) values (NEXT VALUE FOR vk7cgssntp.ISOLOCALESSEQ, ';
+      var j = 0;
+      for (var k in c) {
+        var v = c[k];
+        if (j>0) ln += ', ';
+        ln += "'" + v + "'";
+        j++;
+      }
+      ln += ');';
+      if (i>0) g += '\n';
+      g += ln;
+    }
+    ctrl.generated = g;
+
+
+
+    var data = new Blob([ctrl.generated], {type: 'text/plain;charset=utf-8'});
+    ctrl._fileSaver.saveAs(data, nameFile());
+
+    function nameFile() {
+      var name = '';
+      if (ctrl.destVersion) name += ctrl.destVersion + '_';
+      if (ctrl.hasTimestamp) name += currentTimestamp() + '__';
+      if (ctrl.destName) name += ctrl.destName;
+      if (ctrl.destType) name += '.' + ctrl.destType;
+      if (name === '') name = currentTimestamp() + '.txt';
+      return name;
+    }
+
+    function currentTimestamp() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        var hh = today.getHours();
+        var MM = today.getMinutes();
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+        if (hh < 10) hh = '0' + hh;
+        if (MM < 10) MM = '0' + MM;
+        var timestamp = yyyy + '.' + mm + '.' + dd + '.' + hh + '.' + MM;
+        return timestamp;
+    }
+  };
+
   MainController.prototype.uploadCsv = function() {
     var ctrl = this;
     var input = $('#uploaded');
@@ -101,8 +153,9 @@
     function parseCSV(file) {
       console.log(file.name);
 
-      ctrl.processingParseCSV = true;
-      ctrl._scope.fileName = file.name;
+      ctrl.processing = true;
+      ctrl.uploaded = false;
+      ctrl.fileName = file.name;
 
       var results = ctrl._papa.parse(file, {
         header: true
@@ -116,9 +169,11 @@
             ctrl.keys.push(p);
           }
         }
+        ctrl.uploaded = true;
       }).catch(function(results) {
-        ctrl.processingParseCSV = false;
         alert(result);
+      }).finally(function() {
+        ctrl.processing = false;
       });
     }
 

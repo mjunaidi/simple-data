@@ -2,10 +2,46 @@
   <input id="uploaded" type="file" class="hide">
   <button class="btn btn-primary"
           ng-click="ctrl.uploadCsv()">Upload</button>
+
+  <div ng-if="ctrl.uploaded">
+    <div class="form-group">
+      <label for="destVersion">Version</label>
+      <input ng-model="ctrl.destVersion"
+            type="text"
+            class="form-control"
+            id="destVersion"
+            placeholder="version...">
+    </div>
+
+    <div class="form-group">
+      <label for="destName">File name</label>
+      <input ng-model="ctrl.destName"
+            type="text" class="form-control" id="destName" placeholder="file name...">
+    </div>
+
+    <div class="form-group">
+      <label for="destType">Extension</label>
+      <input ng-model="ctrl.destType"
+             type="text" class="form-control" id="destType" placeholder="extension (i.e: .txt)...">
+    </div>
+
+    <div class="checkbox">
+      <label>
+        <input  ng-model="ctrl.hasTimestamp" type="checkbox"> Add timestamp
+      </label>
+    </div>
+
+    <button class="btn btn-info"
+            ng-click="ctrl.generate()">Generate</button>
+  </div>
+
+  <span ng-if="ctrl.processing" class="glyphicon glyphicon-repeat"></span>
 </form>
 
-<div class="row">
+<div class="row" ng-if="ctrl.uploaded">
   <div class="col-xs-12">
+    <h3>{{ctrl.fileName}}</h3>
+
     <div class="table-responsive">
       <table class="table table-striped table-hover table-condensed">
         <thead>
