@@ -5,6 +5,24 @@
 
   <div ng-if="ctrl.uploaded">
     <div class="form-group">
+      <label for="linePrefix">Line prefix</label>
+      <input ng-model="ctrl.linePrefix"
+            type="text"
+            class="form-control"
+            id="linePrefix"
+            placeholder="each line prefix...">
+    </div>
+
+    <div class="form-group">
+      <label for="linePostfix">Line postfix</label>
+      <input ng-model="ctrl.linePostfix"
+            type="text"
+            class="form-control"
+            id="linePostfix"
+            placeholder="postfix...">
+    </div>
+
+    <div class="form-group">
       <label for="destVersion">Version</label>
       <input ng-model="ctrl.destVersion"
             type="text"

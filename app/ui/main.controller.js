@@ -95,7 +95,7 @@
     var g = '';
     for (var i in ctrl.contents) {
       var c = ctrl.contents[i];
-      var ln = 'INSERT INTO vk7cgssntp.isolocales (ID, LCID, NAME) values (NEXT VALUE FOR vk7cgssntp.ISOLOCALESSEQ, ';
+      var ln = ctrl.linePrefix;
       var j = 0;
       for (var k in c) {
         var v = c[k];
@@ -103,7 +103,7 @@
         ln += "'" + v + "'";
         j++;
       }
-      ln += ');';
+      ln += ctrl.linePostfix;
       if (i>0) g += '\n';
       g += ln;
     }
